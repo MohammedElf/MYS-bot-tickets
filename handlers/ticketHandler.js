@@ -106,6 +106,37 @@ async function upsertJoinLogMessage(client, config, ticketChannel, ticket) {
   if (sent) ticket.joinLogMessageId = sent.id;
 }
 
+module.exports.syncOpenTickets = async (client, config) => {
+  const store = loadTickets();
+  let changed = false;
+
+  for (const channelId of Object.keys(store.openTickets || {})) {
+    const ticket = store.openTickets[channelId];
+    const ticketChannel = await client.channels.fetch(channelId).catch(() => null);
+    if (!ticketChannel) continue;
+
+    const closeRow = new ActionRowBuilder().addComponents(
+      new ButtonBuilder().setCustomId("close_ticket").setLabel("Sluit Ticket").setStyle(ButtonStyle.Danger)
+    );
+
+    if (ticket.firstMessageId) {
+      const firstMsg = await ticketChannel.messages.fetch(ticket.firstMessageId).catch(() => null);
+      if (firstMsg) {
+        await firstMsg.edit({ components: [closeRow] }).catch(() => null);
+      }
+    }
+
+    await upsertJoinLogMessage(client, config, ticketChannel, ticket);
+
+    if (ticket.joinLogMessageId) {
+      store.openTickets[channelId] = ticket;
+      changed = true;
+    }
+  }
+
+  if (changed) saveTickets(store);
+};
+
 async function sendCloseLog(client, config, ticket, closedBy, reason) {
   const logCh = await client.channels.fetch(config.transcriptLogChannel).catch(() => null);
   if (!logCh) return;

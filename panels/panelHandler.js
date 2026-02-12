@@ -10,6 +10,29 @@ function styleFromString(s) {
   }
 }
 
+function sameButtons(message, panelButtons = []) {
+  const configured = panelButtons.map((b) => b.customId);
+  const current = (message.components || [])
+    .flatMap((row) => row.components || [])
+    .map((component) => component.customId)
+    .filter(Boolean);
+
+  return configured.length > 0
+    && configured.length === current.length
+    && configured.every((id, idx) => id === current[idx]);
+}
+
+async function findExistingPanelMessage(channel, panelConfig) {
+  const recent = await channel.messages.fetch({ limit: 30 }).catch(() => null);
+  if (!recent) return null;
+
+  return recent.find((msg) => {
+    if (!msg.author?.bot) return false;
+    const title = msg.embeds?.[0]?.title;
+    return title === (panelConfig.title || null) && sameButtons(msg, panelConfig.buttons || []);
+  }) || null;
+}
+
 module.exports.upsertPanels = async (client, config) => {
   const store = loadPanels();
   const panels = config.panels || {};
@@ -40,6 +63,14 @@ module.exports.upsertPanels = async (client, config) => {
         await msg.edit({ embeds: [embed], components: [row] }).catch(() => null);
         continue;
       }
+    }
+
+    const existing = await findExistingPanelMessage(channel, p);
+    if (existing) {
+      await existing.edit({ embeds: [embed], components: [row] }).catch(() => null);
+      store.panels[key] = { channelId: p.channelId, messageId: existing.id };
+      savePanels(store);
+      continue;
     }
 
     const sent = await channel.send({ embeds: [embed], components: [row] }).catch(() => null);
@@ -86,6 +117,18 @@ module.exports.upsertPermanentMessage = async (client, config) => {
       await existing.edit(messagePayload).catch(() => null);
       return;
     }
+  }
+
+  const recent = await channel.messages.fetch({ limit: 30 }).catch(() => null);
+  const fallbackExisting = recent
+    ? recent.find((msg) => msg.author?.bot && msg.embeds?.[0]?.title === embed.data.title)
+    : null;
+
+  if (fallbackExisting) {
+    await fallbackExisting.edit(messagePayload).catch(() => null);
+    store.permanentMessages[key] = { channelId: permanent.channelId, messageId: fallbackExisting.id };
+    savePanels(store);
+    return;
   }
 
   const sent = await channel.send(messagePayload).catch(() => null);
