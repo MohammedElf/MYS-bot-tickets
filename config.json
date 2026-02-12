@@ -188,5 +188,13 @@
         }
       ]
     }
+  },
+  "announcementChannelId": "1183447315172835358",
+  "announcementAllowedRoleIds": [
+    "1193648047582883900"
+  ],
+  "permanentSupportMessage": {
+    "channelId": "1178387378226876426",
+    "content": "Support Wachtkamer\nDe wachtkamer is alleen voor mensen die hulp nodig hebben. Je kunt hier niet zelf binnenkomen; je moet eerst een ticket aanmaken. We roepen je dan op en verplaatsen je naar het juiste kanaal.\n\nTickets\nAls je hulp nodig hebt, maak dan een ticket in het ‘Ticket Aanmaken’ gedeelte van onze server. Wees duidelijk en kort in je uitleg, zodat we je snel kunnen helpen. Geef alle belangrijke informatie, zoals over welk product of dienst je vraag gaat.\n\nGebruik van Tags\nTag geen staff leden in je tickets. Wij kiezen zelf wie helpt. Reageer ook niet direct op berichten van staff leden. Schrijf gewoon je bericht zonder de reply-functie te gebruiken.\n\nPersoonlijke Berichten\nStuur geen persoonlijke berichten naar staff of ontwikkelaars.\n\nRefunds\nVoor een refund ticket moet je een clip van minimaal 2 minuten met geluid (inclusief je eigen stem) hebben. Zonder clip geen refunds. We doen geen refunds voor kleine dingen van bedragen onder de €10.000. Ons team beslist of iets wordt terugbetaald of niet. Als je refund aanvraag is afgewezen, maak dan niet nog een ticket aan om opnieuw te vragen. Dit kan leiden tot een ban van 1 dag."
   }
 }
