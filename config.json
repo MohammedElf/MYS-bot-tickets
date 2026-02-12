@@ -47,7 +47,12 @@
     "gang": "1183789300047953931",
     "vergoedingen": "1022546554575405086",
     "staff": "1009763312210284604",
-    "unban": "1007343784796901517"
+    "unban": "1007343784796901517",
+    "politie": "1193648083268014302",
+    "kmar": "1193648084434038935",
+    "anwb": "1193648085402914857",
+    "ambulance": "1193952142822752269",
+    "taxi": "1193648086694764655"
   },
   "panels": {
     "vergoedingen": {
@@ -94,11 +99,31 @@
     "overheid": {
       "channelId": "1193935078275944538",
       "title": "Overheid",
-      "description": "Moyas Roleplay Overheid\n🚨 Solliciteren naar Overheidsbanen 🚨\n\nWil je een actieve rol spelen in onze community en deelnemen aan spannende, realistische roleplay? Overweeg dan om te solliciteren voor een van onze overheidsbanen! Momenteel zijn we op zoek naar actieve spelers voor de volgende rollen:\n\n1️⃣ Politie: Handhavers van de wet en orde. Ben je klaar om de veiligheid van onze stad te waarborgen?\n\n2️⃣ Ambulance: Levensredders in noodsituaties. Heb jij wat nodig is om levens te redden en eerste hulp te verlenen?\n\n3️⃣ ANWB: Helden van de weg, altijd klaar om hulp te bieden bij pech of ongevallen. Is technische kennis jouw specialiteit?\n\n4️⃣ Taxi: Het hart van het stadsvervoer. Kun jij mensen op tijd en veilig naar hun bestemming brengen?\n\nWat Zoeken We?\n\nMinimaal 15 jaar.\nVermogen om realistische en boeiende roleplay te creëren.\nGoede communicatievaardigheden en teamwerk.\nBegrip van de serverregels en -protocollen.\n\nLet op: De Koninklijke Marechaussee  is momenteel niet open voor sollicitaties.\n\nWord deel van ons team en draag bij aan een unieke en levendige roleplay ervaring op Moyas Roleplay! Wij kijken uit naar je sollicitatie! 🌟\n\nBedankt voor het spelen op Moyas Roleplay! Laten we samen fantastische verhalen creëren! 🚀",
+      "description": "Moyas Roleplay Overheid\n🚨 Solliciteren naar Overheidsbanen 🚨\n\nWil je een actieve rol spelen in onze community en deelnemen aan spannende, realistische roleplay? Overweeg dan om te solliciteren voor een van onze overheidsbanen! Kies hieronder het juiste sollicitatie-ticket.\n\nBedankt voor het spelen op Moyas Roleplay! Laten we samen fantastische verhalen creëren! 🚀",
       "buttons": [
         {
-          "label": "Ticket openen",
-          "customId": "create:overheid",
+          "label": "Politie Sollicitatie",
+          "customId": "create:politie",
+          "style": "Primary"
+        },
+        {
+          "label": "Kmar Sollicitatie",
+          "customId": "create:kmar",
+          "style": "Secondary"
+        },
+        {
+          "label": "Anwb Sollicitatie",
+          "customId": "create:anwb",
+          "style": "Success"
+        },
+        {
+          "label": "Ambulance Sollicitatie",
+          "customId": "create:ambulance",
+          "style": "Danger"
+        },
+        {
+          "label": "Taxi Sollicitatie",
+          "customId": "create:taxi",
           "style": "Primary"
         }
       ]
@@ -106,7 +131,7 @@
     "donaties": {
       "channelId": "1193935193820639232",
       "title": "Donaties",
-      "description": "(VUL HIER JE TEKST IN)",
+      "description": "Donaties\n🌟 Donatie Tickets op Moyas Roleplay🌟\n\nWil je onze server ondersteunen en tegelijkertijd iets extra's ontvangen voor je bijdrage? Met onze Donatie Tickets kun je niet alleen doneren, maar ook speciale verzoeken en bestellingen plaatsen. Of je nu iets specifieks in gedachten hebt of gewoon je steun wilt tonen, we waarderen elke bijdrage!\n\nWat Kun Je Aanvragen?\n\nSpeciale in-game items of voertuigen.\nAndere speciale verzoeken (bespreekbaar met het team).\n\nBelangrijke Opmerkingen:\n\nElke aanvraag wordt individueel beoordeeld om te zorgen dat deze past binnen de regels en sfeer van onze server.\nDonaties worden gebruikt om onze server te verbeteren en de community te ondersteunen.\nWe behouden ons het recht voor om aanvragen af te wijzen die niet in lijn zijn met onze serverrichtlijnen of -waarden.\nJouw Steun Maakt een Verschil!\nElke donatie helpt ons om Moyas Roleplay te verbeteren en uit te breiden, en biedt jou de kans om iets unieks bij te dragen aan de game-ervaring. We zijn dankbaar voor elke bijdrage en enthousiast om te zien wat voor geweldige ideeën en verzoeken jullie hebben!",
       "buttons": [
         {
           "label": "Ticket openen",
@@ -118,7 +143,7 @@
     "staff": {
       "channelId": "1193954869594304532",
       "title": "Staff",
-      "description": "(VUL HIER JE TEKST IN)",
+      "description": "Staff Sollicitatie\n🌟 Word Lid van het Staff Team op Moyas Roleplay! 🌟\n\nBen je gepassioneerd over onze FiveM Roleplay server en wil je een stap verder gaan? Wij zijn op zoek naar enthousiaste en toegewijde spelers die ons staff team willen versterken! Als stafflid speel je een cruciale rol in het beheren van de server, ondersteunen van spelers en bijdragen aan een geweldige roleplay-ervaring.\n\nWat Zoeken We?\n\nBetrouwbaarheid en verantwoordelijkheidsgevoel.\nGoede kennis van de serverregels en roleplay-principes.\nUitstekende communicatie- en probleemoplossende vaardigheden.\nVermogen om eerlijk en onpartijdig te handelen.\nEen positieve houding en een teamspeler mentaliteit.",
       "buttons": [
         {
           "label": "Ticket openen",
@@ -130,7 +155,7 @@
     "gang": {
       "channelId": "1193955202626244699",
       "title": "Gang-aanvragen",
-      "description": "(VUL HIER JE TEKST IN)",
+      "description": "Gang Aanvraag\n🔥 Start Je Eigen Gang op Moyas Roleplay! 🔥\n\nDroom je ervan om je eigen gang te leiden en een blijvende impact te hebben in onze wereld? Nu heb je de kans! We zijn nu open voor aanvragen om nieuwe gangs te starten op onze server. Dit is je gelegenheid om een uniek verhaal en een machtige groep in onze community te creëren.\n\nVereisten voor het Starten van een Gang:\n\nTeam van Minimaal 5 Leden: Je gang moet beginnen met ten minste 5 leden die jouw visie delen.\nEen Week Actieve Spelervaring: Elk lid van je beoogde gang moet minimaal één week actief zijn geweest op onze server.\nEen Uniek Concept: We zijn op zoek naar originele en boeiende gangconcepten die bijdragen aan de diversiteit en dynamiek van de server.\n\nDit is meer dan alleen het leiden van een gang; het gaat om het creëren van een verhaal, het opbouwen van relaties en het achterlaten van een nalatenschap in onze wereld. Ben jij klaar om je eigen pad te smeden op Moyas Roleplay?",
       "buttons": [
         {
           "label": "Ticket openen",
@@ -142,7 +167,7 @@
     "contentcreator": {
       "channelId": "1194950184099119155",
       "title": "Content-Creator",
-      "description": "(VUL HIER JE TEKST IN)",
+      "description": "Content creator worden\n🌟 Word een Deel van Moyas Roleplay! 🌟\n\nBen jij gepassioneerd over gaming en content creatie? Zoek je een platform om je talenten te laten schitteren en een gemeenschap op te bouwen? Dan is Moyas Roleplay de perfecte plek voor jou!\n\nWij zijn altijd op zoek naar creatieve en enthousiaste content creators die ons willen helpen de unieke wereld van Moyas Roleplay tot leven te brengen. Of je nu een ervaren streamer bent of net begint met je content creatie reis, wij bieden je een podium om je vaardigheden te tonen en je publiek te laten groeien.\n\nWat Bieden Wij?\n\nlevendige server met een rijke verhaallijn.\nEen ondersteunende en samenwerkende community.\nKansen om je content naar een hoger niveau te tillen.\n\nHoe Doe Je Mee?\nHet is simpel! Open een ticket voor een aanvraag. Laat ons weten waarom jij een geweldige aanvulling zou zijn op de Moyas Roleplay-familie en deel een beetje over je ervaring als content creator.\n\nWe kunnen niet wachten om je te zien schitteren in Moyas Roleplay! Open vandaag nog je ticket en begin aan een onvergetelijk avontuur!",
       "buttons": [
         {
           "label": "Ticket openen",
