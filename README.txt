@@ -21,7 +21,7 @@
 - Close-log embed met Ticket ID / Opened By / Closed By / Open Time / Claimed By / Reason
 
 
-Zoo Koel!
+Zoo Koel!   KACHE
 
  
 ## Commands (NL)
