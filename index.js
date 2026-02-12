@@ -20,6 +20,9 @@ client.once("clientReady", async () => {
 
   // Register slash commands (guild-level for fast availability)
   await commandHandler.registerGuildCommands(client, config);
+
+  // Upsert permanent wachtkamer bericht
+  await panelHandler.upsertPermanentMessage(client, config);
 });
 
 ticketHandler.attach(client, config);

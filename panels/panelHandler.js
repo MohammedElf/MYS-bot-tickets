@@ -49,3 +49,31 @@ module.exports.upsertPanels = async (client, config) => {
     }
   }
 };
+
+module.exports.upsertPermanentMessage = async (client, config) => {
+  const permanent = config.permanentSupportMessage;
+  if (!permanent?.channelId || !permanent?.content) return;
+
+  const store = loadPanels();
+  store.permanentMessages = store.permanentMessages || {};
+
+  const channel = await client.channels.fetch(permanent.channelId).catch(() => null);
+  if (!channel) return;
+
+  const key = "supportWachtkamer";
+  const saved = store.permanentMessages[key];
+
+  if (saved?.channelId === permanent.channelId && saved?.messageId) {
+    const existing = await channel.messages.fetch(saved.messageId).catch(() => null);
+    if (existing) {
+      await existing.edit({ content: permanent.content }).catch(() => null);
+      return;
+    }
+  }
+
+  const sent = await channel.send({ content: permanent.content }).catch(() => null);
+  if (!sent) return;
+
+  store.permanentMessages[key] = { channelId: permanent.channelId, messageId: sent.id };
+  savePanels(store);
+};

@@ -6,6 +6,10 @@ function memberHasRole(member, roleId) {
   return !!member?.roles?.cache?.has(roleId);
 }
 
+function memberHasAnyRole(member, roleIds = []) {
+  return roleIds.some((roleId) => memberHasRole(member, roleId));
+}
+
 function ticketFromChannel(store, channelId) {
   return store.openTickets[channelId] || null;
 }
@@ -61,7 +65,8 @@ module.exports.registerGuildCommands = async (client, config) => {
     ]},
     { name: "jumptotop", description: "Toon een knop om naar de eerste bot-post te springen" },
     { name: "switchpanel", description: "Verander panel/type van dit ticket", options: [{ name: "to_panel", description: "Nieuwe panel key (bv: support, vergoedingen, unban, gang, staff)", type: 3, required: true }] },
-    { name: "reopen", description: "Heropen een eerder gesloten ticket-ID", options: [{ name: "ticket_id", description: "Ticket ID", type: 4, required: true }] }
+    { name: "reopen", description: "Heropen een eerder gesloten ticket-ID", options: [{ name: "ticket_id", description: "Ticket ID", type: 4, required: true }] },
+    { name: "plaats-mededeling", description: "Plaats een mededeling in het mededelingen kanaal", options: [{ name: "bericht", description: "Het bericht dat je wilt plaatsen", type: 3, required: true }] }
   ];
 
   const guilds = await client.guilds.fetch();
@@ -252,6 +257,29 @@ module.exports.attach = (client, config) => {
 
       await updateJoinLog(client, config, interaction.guild, interaction.channel.id);
       return interaction.reply({ content: `Ticket is omgezet naar panel: ${toPanel}`, ephemeral: true });
+    }
+
+
+    // /plaats-mededeling
+    if (interaction.commandName === "plaats-mededeling") {
+      const allowedRoleIds = config.announcementAllowedRoleIds || [];
+      if (!memberHasAnyRole(interaction.member, allowedRoleIds)) {
+        return interaction.reply({ content: "Je hebt geen rechten om dit te doen.", ephemeral: true });
+      }
+
+      const announcementChannelId = config.announcementChannelId;
+      const announcementChannel = announcementChannelId
+        ? await interaction.guild.channels.fetch(announcementChannelId).catch(() => null)
+        : null;
+
+      if (!announcementChannel) {
+        return interaction.reply({ content: "Mededelingen kanaal niet gevonden.", ephemeral: true });
+      }
+
+      const bericht = interaction.options.getString("bericht", true);
+      await announcementChannel.send({ content: `@everyone\n\n${bericht}` }).catch(() => null);
+
+      return interaction.reply({ content: `Mededeling geplaatst in <#${announcementChannel.id}>.`, ephemeral: true });
     }
 
     // /reopen
