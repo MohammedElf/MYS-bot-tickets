@@ -1,3 +1,11 @@
+require('dotenv').config();
+const config = require('./config.json');
+
+const token = process.env.DISCORD_TOKEN || config.token;
+
+client.login(token);
+
+
 const { Client, GatewayIntentBits } = require("discord.js");
 const config = require("./config.json");
 const panelHandler = require("./panels/panelHandler");
