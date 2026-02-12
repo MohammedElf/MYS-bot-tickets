@@ -277,7 +277,13 @@ module.exports.attach = (client, config) => {
       }
 
       const bericht = interaction.options.getString("bericht", true);
-      await announcementChannel.send({ content: `@everyone\n\n${bericht}` }).catch(() => null);
+      const embed = new EmbedBuilder()
+        .setTitle("📢 Mededeling")
+        .setDescription(bericht)
+        .setColor("#FEE75C")
+        .setTimestamp();
+
+      await announcementChannel.send({ content: "@everyone", embeds: [embed] }).catch(() => null);
 
       return interaction.reply({ content: `Mededeling geplaatst in <#${announcementChannel.id}>.`, ephemeral: true });
     }
