@@ -20,6 +20,10 @@
 - Sluiten met bevestiging + transcript naar opener (DM) + transcript kanaal (config.transcriptLogChannel)
 - Close-log embed met Ticket ID / Opened By / Closed By / Open Time / Claimed By / Reason
 
+
+Zoo Koel!
+
+ 
 ## Commands (NL)
 - /add gebruiker
 - /remove gebruiker
