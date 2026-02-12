@@ -26,10 +26,40 @@ function staffRoleFor(config, ticketType) {
 }
 
 async function buildTranscript(channel, limit = 200) {
-  const fetched = await channel.messages.fetch({ limit }).catch(() => null);
-  if (!fetched) return "Geen transcript beschikbaar (fetch error).";
-  const msgs = Array.from(fetched.values()).sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+  const maxMessages = Math.max(1, Math.min(Number(limit) || 200, 1000));
+  const all = [];
+  let before;
+
+  while (all.length < maxMessages) {
+    const batchSize = Math.min(100, maxMessages - all.length);
+    const fetched = await channel.messages.fetch({ limit: batchSize, before }).catch(() => null);
+    if (!fetched) {
+      return all.length
+        ? all
+            .sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+            .map(m => {
+              const ts = new Date(m.createdTimestamp).toLocaleString("nl-NL");
+              const author = m.author?.tag || "unknown";
+              const content = m.content || "";
+              const att = m.attachments?.size ? ` [bijlagen: ${m.attachments.map(a => a.url).join(", ")}]` : "";
+              return `[${ts}] ${author}: ${content}${att}`;
+            })
+            .join("\n")
+        : "Geen transcript beschikbaar (fetch error).";
+    }
+
+    const page = Array.from(fetched.values());
+    if (!page.length) break;
+
+    all.push(...page);
+    before = page[page.length - 1].id;
+
+    if (page.length < batchSize) break;
+  }
+
+  const msgs = all.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
   if (!msgs.length) return "Geen transcript beschikbaar.";
+
   const lines = msgs.map(m => {
     const ts = new Date(m.createdTimestamp).toLocaleString("nl-NL");
     const author = m.author?.tag || "unknown";
