@@ -1,0 +1,13 @@
+{
+  "name": "bot-tickets-advanced",
+  "version": "4.0.0",
+  "description": "Multi-panel ticket bot (production v4) - panels, anti-spam, transcripts, logs, staff roles, commands (NL)",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  }
+}

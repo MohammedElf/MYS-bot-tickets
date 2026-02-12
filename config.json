@@ -1,0 +1,167 @@
+{
+  "token": "PASTE_YOUR_TOKEN_HERE",
+  "ticketCategory": "1471607818338697369",
+  "transcriptLogChannel": "1183462748798079016",
+  "joinLogChannel": "1193980776333717524",
+  "managerRoleForAdd": "1178363074772738248",
+  "addRoleChoices": [
+    {
+      "name": "Eigenaar",
+      "value": "1193648047582883900"
+    },
+    {
+      "name": "Hoge Raad",
+      "value": "1193648074497740952"
+    },
+    {
+      "name": "Management",
+      "value": "1193648076154486814"
+    },
+    {
+      "name": "Head Staff",
+      "value": "1193648077081423883"
+    },
+    {
+      "name": "Super admin",
+      "value": "1193648078331330560"
+    },
+    {
+      "name": "Admin",
+      "value": "1193648079405064327"
+    },
+    {
+      "name": "Super Moderator",
+      "value": "1193648080373956730"
+    },
+    {
+      "name": "Moderator",
+      "value": "1193648080797569165"
+    },
+    {
+      "name": "Junior Moderator",
+      "value": "1193648082223628419"
+    }
+  ],
+  "staffRolesByPanel": {
+    "support": "1006909087927259227",
+    "gang": "1183789300047953931",
+    "vergoedingen": "1022546554575405086",
+    "staff": "1009763312210284604",
+    "unban": "1007343784796901517"
+  },
+  "panels": {
+    "vergoedingen": {
+      "channelId": "1212538292344717332",
+      "title": "Vergoedingen-aanvragen",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Ticket openen",
+          "customId": "create:vergoedingen",
+          "style": "Primary"
+        }
+      ]
+    },
+    "support": {
+      "channelId": "1193935336422776872",
+      "title": "Support",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Support Ticket",
+          "customId": "create:support",
+          "style": "Primary"
+        },
+        {
+          "label": "Scenario Ticket",
+          "customId": "create:scenario",
+          "style": "Secondary"
+        }
+      ]
+    },
+    "unban": {
+      "channelId": "1193934940165902396",
+      "title": "Unban",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Ticket openen",
+          "customId": "create:unban",
+          "style": "Primary"
+        }
+      ]
+    },
+    "overheid": {
+      "channelId": "1193935078275944538",
+      "title": "Overheid",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Ticket openen",
+          "customId": "create:overheid",
+          "style": "Primary"
+        }
+      ]
+    },
+    "donaties": {
+      "channelId": "1193935193820639232",
+      "title": "Donaties",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Ticket openen",
+          "customId": "create:donaties",
+          "style": "Primary"
+        }
+      ]
+    },
+    "staff": {
+      "channelId": "1193954869594304532",
+      "title": "Staff",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Ticket openen",
+          "customId": "create:staff",
+          "style": "Primary"
+        }
+      ]
+    },
+    "gang": {
+      "channelId": "1193955202626244699",
+      "title": "Gang-aanvragen",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Ticket openen",
+          "customId": "create:gang",
+          "style": "Primary"
+        }
+      ]
+    },
+    "contentcreator": {
+      "channelId": "1194950184099119155",
+      "title": "Content-Creator",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Ticket openen",
+          "customId": "create:contentcreator",
+          "style": "Primary"
+        }
+      ]
+    },
+    "makelaar": {
+      "channelId": "1208844674656374834",
+      "title": "Makelaar",
+      "description": "(VUL HIER JE TEKST IN)",
+      "buttons": [
+        {
+          "label": "Ticket openen",
+          "customId": "create:makelaar",
+          "style": "Primary"
+        }
+      ]
+    }
+  }
+}
