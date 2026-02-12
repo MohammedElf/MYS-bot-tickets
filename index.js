@@ -21,6 +21,9 @@ client.once("clientReady", async () => {
   // Register slash commands (guild-level for fast availability)
   await commandHandler.registerGuildCommands(client, config);
 
+  // Herstel open ticket knoppen/log berichten na restart
+  await ticketHandler.syncOpenTickets(client, config);
+
   // Upsert permanent wachtkamer bericht
   await panelHandler.upsertPermanentMessage(client, config);
 });
