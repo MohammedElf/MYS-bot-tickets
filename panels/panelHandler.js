@@ -1,6 +1,28 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const { loadPanels, savePanels } = require("../handlers/helpers");
 
+const PANEL_BUTTON_EMOJIS = {
+  support: "🛠️",
+  scenario: "🎭",
+  unban: "🔓",
+  politie: "🚓",
+  anwb: "🛻",
+  ambulance: "🚑",
+  taxi: "🚕",
+  donaties: "💛",
+  staff: "🧑‍💼",
+  gang: "🕶️",
+  contentcreator: "🎥",
+  makelaar: "🏡",
+  vergoedingen: "💶"
+};
+
+function emojiForButton(button) {
+  if (button.emoji) return button.emoji;
+  const type = (button.customId || "").split(":")[1];
+  return PANEL_BUTTON_EMOJIS[type] || "🎫";
+}
+
 function styleFromString(s) {
   switch ((s || "").toLowerCase()) {
     case "secondary": return ButtonStyle.Secondary;
@@ -45,12 +67,13 @@ module.exports.upsertPanels = async (client, config) => {
     const embed = new EmbedBuilder()
       .setTitle(p.title || key)
       .setDescription(p.description || "Klik op de knop hieronder om een ticket aan te maken.")
-      .setColor("#0099ff");
+      .setColor("#FEE75C");
 
     const btns = (p.buttons || []).slice(0, 5).map(b =>
       new ButtonBuilder()
         .setCustomId(b.customId)
         .setLabel(b.label)
+        .setEmoji(emojiForButton(b))
         .setStyle(styleFromString(b.style))
     );
 

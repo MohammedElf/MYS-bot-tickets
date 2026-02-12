@@ -91,6 +91,7 @@ async function upsertJoinLogMessage(client, config, ticketChannel, ticket) {
     new ButtonBuilder()
       .setCustomId(`join_ticket:${ticketChannel.id}`)
       .setLabel("Join Ticket")
+      .setEmoji("👀")
       .setStyle(ButtonStyle.Success)
   );
 
@@ -116,7 +117,7 @@ module.exports.syncOpenTickets = async (client, config) => {
     if (!ticketChannel) continue;
 
     const closeRow = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId("close_ticket").setLabel("Sluit Ticket").setStyle(ButtonStyle.Danger)
+      new ButtonBuilder().setCustomId("close_ticket").setLabel("Sluit Ticket").setEmoji("🔒").setStyle(ButtonStyle.Danger)
     );
 
     if (ticket.firstMessageId) {
@@ -233,8 +234,8 @@ module.exports.attach = (client, config) => {
       // Close confirm flow (button in ticket)
       if (interaction.customId === "close_ticket") {
         const row = new ActionRowBuilder().addComponents(
-          new ButtonBuilder().setCustomId(`confirm_close:${interaction.channel.id}`).setLabel("Ja, sluit ticket").setStyle(ButtonStyle.Danger),
-          new ButtonBuilder().setCustomId(`cancel_close:${interaction.channel.id}`).setLabel("Annuleren").setStyle(ButtonStyle.Secondary)
+          new ButtonBuilder().setCustomId(`confirm_close:${interaction.channel.id}`).setLabel("Ja, sluit ticket").setEmoji("✅").setStyle(ButtonStyle.Danger),
+          new ButtonBuilder().setCustomId(`cancel_close:${interaction.channel.id}`).setLabel("Annuleren").setEmoji("↩️").setStyle(ButtonStyle.Secondary)
         );
         return interaction.reply({ content: "Weet je zeker dat je dit ticket wilt sluiten?", components: [row], ephemeral: true });
       }
@@ -297,7 +298,7 @@ module.exports.attach = (client, config) => {
         });
 
         const closeRow = new ActionRowBuilder().addComponents(
-          new ButtonBuilder().setCustomId("close_ticket").setLabel("Sluit Ticket").setStyle(ButtonStyle.Danger)
+          new ButtonBuilder().setCustomId("close_ticket").setLabel("Sluit Ticket").setEmoji("🔒").setStyle(ButtonStyle.Danger)
         );
 
         const firstMsg = await ticketChannel.send({
