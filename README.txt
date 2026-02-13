@@ -15,6 +15,8 @@
 ## Wat doet deze bot?
 - Stuurt/Update ticket panels (anti panel-spam: edit i.p.v. nieuwe posts)
 - Tickets onder categorie (config.ticketCategory)
+- Automatische categorie per ticket type als `config.ticketCategory` niet gezet is (standaard prefix `TI-`, aanpasbaar met `config.ticketCategoryPrefix`)
+- Optioneel vaste categorie per type via `config.ticketCategoriesByType` (bijv. `"donaties": "<categorieId>"`)
 - Staff rol per panel (config.staffRolesByPanel)
 - Join-log (config.joinLogChannel) met Join-knop + staff list update
 - Sluiten met bevestiging + transcript naar opener (DM) + transcript kanaal (config.transcriptLogChannel)
