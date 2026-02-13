@@ -78,20 +78,20 @@ module.exports.registerGuildCommands = async (client, config) => {
       description: "Voeg een staff/support rol toe aan het huidige ticket kanaal",
       options: [{ name: "rol", description: "Welke rol wil je toevoegen?", type: 3, required: true, choices }]
     },
-    { name: "add", description: "Voeg een gebruiker toe aan dit ticket", options: [{ name: "gebruiker", description: "Gebruiker", type: 6, required: true }] },
-    { name: "remove", description: "Verwijder een gebruiker uit dit ticket", options: [{ name: "gebruiker", description: "Gebruiker", type: 6, required: true }] },
-    { name: "rename", description: "Hernoem dit ticket", options: [{ name: "naam", description: "Nieuwe ticket naam", type: 3, required: true }] },
-    { name: "claim", description: "Claim dit ticket (wijs jezelf toe)" },
-    { name: "unclaim", description: "Verwijder de claim op dit ticket" },
-    { name: "transfer", description: "Draag een geclaimd ticket over", options: [{ name: "gebruiker", description: "Nieuwe claimer", type: 6, required: true }] },
-    { name: "close", description: "Sluit dit ticket", options: [{ name: "reden", description: "Reden", type: 3, required: false }] },
-    { name: "closerequest", description: "Vraag opener om sluiting goed te keuren", options: [
+    { name: "toevoegen", description: "Voeg een gebruiker toe aan dit ticket", options: [{ name: "gebruiker", description: "Gebruiker", type: 6, required: true }] },
+    { name: "verwijderen", description: "Verwijder een gebruiker uit dit ticket", options: [{ name: "gebruiker", description: "Gebruiker", type: 6, required: true }] },
+    { name: "hernoemen", description: "Hernoem dit ticket", options: [{ name: "naam", description: "Nieuwe ticket naam", type: 3, required: true }] },
+    { name: "claimen", description: "Claim dit ticket (wijs jezelf toe)" },
+    { name: "unclaimen", description: "Verwijder de claim op dit ticket" },
+    { name: "overdragen", description: "Draag een geclaimd ticket over", options: [{ name: "gebruiker", description: "Nieuwe claimer", type: 6, required: true }] },
+    { name: "sluiten", description: "Sluit dit ticket", options: [{ name: "reden", description: "Reden", type: 3, required: false }] },
+    { name: "sluitverzoek", description: "Vraag opener om sluiting goed te keuren", options: [
       { name: "close_delay", description: "Delay in seconden (0-3600)", type: 4, required: true },
       { name: "reden", description: "Reden", type: 3, required: false }
     ]},
-    { name: "jumptotop", description: "Toon een knop om naar de eerste bot-post te springen" },
-    { name: "switchpanel", description: "Verander panel/type van dit ticket", options: [{ name: "to_panel", description: "Nieuwe panel key (bv: support, vergoedingen, unban, gang, staff)", type: 3, required: true }] },
-    { name: "reopen", description: "Heropen een eerder gesloten ticket-ID", options: [{ name: "ticket_id", description: "Ticket ID", type: 4, required: true }] },
+    { name: "naarboven", description: "Toon een knop om naar de eerste bot-post te springen" },
+    { name: "wisselpaneel", description: "Verander panel/type van dit ticket", options: [{ name: "naar_paneel", description: "Nieuwe panel key (bv: support, vergoedingen, unban, gang, staff)", type: 3, required: true }] },
+    { name: "heropenen", description: "Heropen een eerder gesloten ticket-ID", options: [{ name: "ticket_id", description: "Ticket ID", type: 4, required: true }] },
     { name: "plaats-mededeling", description: "Plaats een mededeling in het mededelingen kanaal", options: [{ name: "bericht", description: "Het bericht dat je wilt plaatsen", type: 3, required: true }] },
     { name: "tickets-overzicht", description: "Plaats een overzicht van alle open tickets in het admin kanaal" }
   ];
@@ -115,7 +115,7 @@ module.exports.attach = (client, config) => {
     const t = ticketFromChannel(store, interaction.channel.id);
 
     // Commands below mostly require being in ticket
-    const needsTicket = ["support-rol-toevoegen","add","remove","rename","claim","unclaim","transfer","close","closerequest","jumptotop","switchpanel"];
+    const needsTicket = ["support-rol-toevoegen","toevoegen","verwijderen","hernoemen","claimen","unclaimen","overdragen","sluiten","sluitverzoek","naarboven","wisselpaneel"];
     if (needsTicket.includes(interaction.commandName) && !t) {
       return interaction.reply({ content: "Dit kanaal is geen ticket kanaal.", ephemeral: true });
     }
@@ -141,8 +141,8 @@ module.exports.attach = (client, config) => {
       return interaction.reply({ content: `Rol toegevoegd: <@&${roleId}>`, ephemeral: true });
     }
 
-    // /add
-    if (interaction.commandName === "add") {
+    // /toevoegen
+    if (interaction.commandName === "toevoegen") {
       const user = interaction.options.getUser("gebruiker", true);
       await interaction.channel.permissionOverwrites.edit(user.id, {
         ViewChannel: true, SendMessages: true, ReadMessageHistory: true
@@ -150,22 +150,22 @@ module.exports.attach = (client, config) => {
       return interaction.reply({ content: `Gebruiker toegevoegd: <@${user.id}>`, ephemeral: true });
     }
 
-    // /remove
-    if (interaction.commandName === "remove") {
+    // /verwijderen
+    if (interaction.commandName === "verwijderen") {
       const user = interaction.options.getUser("gebruiker", true);
       await interaction.channel.permissionOverwrites.delete(user.id).catch(() => null);
       return interaction.reply({ content: `Gebruiker verwijderd: <@${user.id}>`, ephemeral: true });
     }
 
-    // /rename
-    if (interaction.commandName === "rename") {
+    // /hernoemen
+    if (interaction.commandName === "hernoemen") {
       const name = interaction.options.getString("naam", true);
       await interaction.channel.setName(name).catch(() => null);
       return interaction.reply({ content: "Ticket hernoemd.", ephemeral: true });
     }
 
-    // /claim
-    if (interaction.commandName === "claim") {
+    // /claimen
+    if (interaction.commandName === "claimen") {
       t.claimedBy = interaction.user.id;
       // ensure claimer has access
       await interaction.channel.permissionOverwrites.edit(interaction.user.id, {
@@ -181,16 +181,16 @@ module.exports.attach = (client, config) => {
       return interaction.reply({ content: `Ticket geclaimd door <@${interaction.user.id}>.`, ephemeral: false });
     }
 
-    // /unclaim
-    if (interaction.commandName === "unclaim") {
+    // /unclaimen
+    if (interaction.commandName === "unclaimen") {
       t.claimedBy = null;
       store.openTickets[interaction.channel.id] = t;
       saveTickets(store);
       return interaction.reply({ content: "Claim verwijderd.", ephemeral: true });
     }
 
-    // /transfer
-    if (interaction.commandName === "transfer") {
+    // /overdragen
+    if (interaction.commandName === "overdragen") {
       const user = interaction.options.getUser("gebruiker", true);
       t.claimedBy = user.id;
       t.staffInTicket = Array.from(new Set([...(t.staffInTicket || []), user.id]));
@@ -205,16 +205,16 @@ module.exports.attach = (client, config) => {
       return interaction.reply({ content: `Ticket overgedragen aan <@${user.id}>.`, ephemeral: false });
     }
 
-    // /close
-    if (interaction.commandName === "close") {
+    // /sluiten
+    if (interaction.commandName === "sluiten") {
       const reason = interaction.options.getString("reden") || "No reason specified";
       await interaction.reply({ content: "Ticket wordt gesloten...", ephemeral: true }).catch(() => null);
       await ticketHandler._closeTicket(client, config, interaction.channel, interaction.user.id, reason);
       return;
     }
 
-    // /closerequest
-    if (interaction.commandName === "closerequest") {
+    // /sluitverzoek
+    if (interaction.commandName === "sluitverzoek") {
       const delay = Math.max(0, Math.min(3600, interaction.options.getInteger("close_delay", true)));
       const reason = interaction.options.getString("reden") || "No reason specified";
 
@@ -236,8 +236,8 @@ module.exports.attach = (client, config) => {
       return interaction.reply({ content: "Sluitverzoek verstuurd.", ephemeral: true });
     }
 
-    // /jumptotop
-    if (interaction.commandName === "jumptotop") {
+    // /naarboven
+    if (interaction.commandName === "naarboven") {
       if (!t.firstMessageId) return interaction.reply({ content: "Geen startbericht gevonden.", ephemeral: true });
 
       const url = `https://discord.com/channels/${interaction.guild.id}/${interaction.channel.id}/${t.firstMessageId}`;
@@ -247,9 +247,9 @@ module.exports.attach = (client, config) => {
       return interaction.reply({ content: "Klik om naar het begin van het ticket te gaan:", components: [row], ephemeral: true });
     }
 
-    // /switchpanel
-    if (interaction.commandName === "switchpanel") {
-      const toPanel = interaction.options.getString("to_panel", true);
+    // /wisselpaneel
+    if (interaction.commandName === "wisselpaneel") {
+      const toPanel = interaction.options.getString("naar_paneel", true);
       const panels = config.panels || {};
       if (!panels[toPanel] && toPanel !== "scenario") {
         return interaction.reply({ content: "Onbekend panel. Gebruik bv: support, vergoedingen, unban, gang, staff, donaties, overheid, contentcreator, makelaar", ephemeral: true });
@@ -333,8 +333,8 @@ module.exports.attach = (client, config) => {
       return interaction.reply({ content: `Overzicht geplaatst in <#${overviewChannel.id}>.`, ephemeral: true });
     }
 
-    // /reopen
-    if (interaction.commandName === "reopen") {
+    // /heropenen
+    if (interaction.commandName === "heropenen") {
       const ticketId = interaction.options.getInteger("ticket_id", true);
       const closed = store.closedTickets[String(ticketId)];
       if (!closed) return interaction.reply({ content: "Ticket ID niet gevonden in gesloten tickets.", ephemeral: true });
