@@ -194,33 +194,33 @@
     "1193648047582883900"
   ],
   "permanentSupportMessage": {
-    "channelId": "1178387378226876426",
+    "channelId": "1182678665771880559",
     "content": null,
     "embeds": [
       {
-        "title": "Moyas Roleplay Support",
-        "description": "Welkom bij onze support. Om iedereen zo snel en eerlijk mogelijk te helpen, gelden de onderstaande regels.",
-        "color": 5814783,
+        "title": "📌 Ticketafhandeling Regels",
+        "description": "**Het naleven van de onderstaande regels voor ticketafhandeling is van cruciaal belang voor het soepel functioneren van onze FiveM-server en voor het bieden van uitstekende service aan onze spelers.**\n\nDeze regels zijn opgesteld met het oog op efficiëntie, klanttevredenheid en de algehele kwaliteit van onze serverervaring. Door deze regels te volgen, zorgen we voor een gestroomlijnde en professionele aanpak bij het behandelen van tickets. Dit bevordert niet alleen een positieve indruk van onze gemeenschap, maar zorgt er ook voor dat elke speler de aandacht en ondersteuning krijgt die ze verdienen.\n\nDankzij jullie inzet om deze richtlijnen te volgen, kunnen we samen een positieve en ondersteunende omgeving creëren voor iedereen die onze FiveM-server bezoekt.",
+        "color": 16766720,
         "fields": [
           {
-            "name": "Support Wachtkamer",
-            "value": "De wachtkamer is alleen voor mensen die hulp nodig hebben. Je kunt hier niet zelf binnenkomen; je moet eerst een ticket aanmaken. We roepen je dan op en verplaatsen je naar het juiste kanaal."
+            "name": "1) Ticket Naam Aanpassen",
+            "value": "Het is belangrijk om de ticketnaam aan te passen om tickets gemakkelijk te kunnen onderscheiden en beheren. Bijvoorbeeld: als een supportticket binnenkomt met de naam `ticket-2300`, verander deze dan naar `support-2300` met het commando **`/rename support-2300`**."
           },
           {
-            "name": "Tickets",
-            "value": "Als je hulp nodig hebt, maak dan een ticket in het ‘Ticket Aanmaken’ gedeelte van onze server. Wees duidelijk en kort in je uitleg, zodat we je snel kunnen helpen. Geef alle belangrijke informatie, zoals over welk product of dienst je vraag gaat."
+            "name": "2) Juiste Intake en Vragen",
+            "value": "Voordat je andere teamleden erbij betrekt, zorg ervoor dat je de juiste intake doet en de benodigde vragen stelt om het probleem of de vraag van de klant te begrijpen en vast te leggen. Dit helpt om de efficiëntie van de ticketafhandeling te verbeteren."
           },
           {
-            "name": "Gebruik van Tags",
-            "value": "Tag geen staff leden in je tickets. Wij kiezen zelf wie helpt. Reageer ook niet direct op berichten van staff leden. Schrijf gewoon je bericht zonder de reply-functie te gebruiken."
+            "name": "3) Niet Bemoeien zonder Tagging",
+            "value": "Het is verboden om een ticket te behandelen als je er niet in bent getagd. Laat andere teamleden de tijd om het zelf te behandelen, tenzij je een rang hebt vanaf managementniveau of hoger. Dit voorkomt onnodige verwarring en conflicten in de ticketafhandeling."
           },
           {
-            "name": "Persoonlijke Berichten",
-            "value": "Stuur geen persoonlijke berichten naar staff of ontwikkelaars."
+            "name": "4) Niet Zelf Afsluiten",
+            "value": "Sluit een ticket nooit zelf af. Stuur in plaats daarvan een request to close naar de klant, zodat de klant zelf de ticket kan sluiten wanneer hij tevreden is met de oplossing of de vraag is beantwoord. Dit kun je doen met command **`/closerequest`**."
           },
           {
-            "name": "Refunds",
-            "value": "Voor een refund ticket moet je een clip van minimaal 2 minuten met geluid (inclusief je eigen stem) hebben. Zonder clip geen refunds. We doen geen refunds voor kleine dingen van bedragen onder de €10.000. Ons team beslist of iets wordt terugbetaald of niet. Als je refund aanvraag is afgewezen, maak dan niet nog een ticket aan om opnieuw te vragen. Dit kan leiden tot een ban van 1 dag."
+            "name": "✅ Bevestiging",
+            "value": "Heb je de regels gelezen? Laat hieronder graag een like achter, zodat we weten wie de regels wel en niet heeft gelezen."
           }
         ]
       }
