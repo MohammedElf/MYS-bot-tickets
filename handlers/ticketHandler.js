@@ -25,6 +25,58 @@ function staffRoleFor(config, ticketType) {
   return config.staffRolesByPanel?.[ticketType] || null;
 }
 
+function safeCategoryName(s) {
+  const cleaned = (s || "tickets")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9\-_]/g, "")
+    .replace(/-+/g, "-")
+    .slice(0, 80);
+  return cleaned || "tickets";
+}
+
+async function resolveParentCategory(guild, config, ticketType, panelName, staffRoleId) {
+  const explicitByType = config.ticketCategoriesByType?.[ticketType];
+  if (explicitByType) {
+    const byTypeCategory = await guild.channels.fetch(explicitByType).catch(() => null);
+    if (byTypeCategory && byTypeCategory.type === ChannelType.GuildCategory) return byTypeCategory.id;
+  }
+
+  if (config.ticketCategory) {
+    const fixedCategory = await guild.channels.fetch(config.ticketCategory).catch(() => null);
+    if (fixedCategory && fixedCategory.type === ChannelType.GuildCategory) return fixedCategory.id;
+  }
+
+  const prefix = config.ticketCategoryPrefix || "TI-";
+  const suffix = panelName || ticketType;
+  const wantedName = safeCategoryName(`${prefix}${suffix}`);
+
+  const existing = guild.channels.cache.find(
+    ch => ch.type === ChannelType.GuildCategory && ch.name.toLowerCase() === wantedName.toLowerCase()
+  );
+  if (existing) return existing.id;
+
+  const categoryOverwrites = [
+    {
+      id: guild.id,
+      deny: [PermissionsBitField.Flags.ViewChannel]
+    }
+  ];
+
+  if (staffRoleId) {
+    categoryOverwrites.push({
+      id: staffRoleId,
+      allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ReadMessageHistory]
+    });
+  }
+
+  const created = await guild.channels.create({
+    name: wantedName,
+    type: ChannelType.GuildCategory,
+    permissionOverwrites: categoryOverwrites
+  });
+  return created.id;
+}
+
 async function buildTranscript(channel, limit = 200) {
   const maxMessages = Math.max(1, Math.min(Number(limit) || 200, 1000));
   const all = [];
@@ -290,10 +342,18 @@ module.exports.attach = (client, config) => {
 
         const channelName = `${ticketType}-${safeName(interaction.user.username)}-${ticketId}`;
 
+        const parentCategoryId = await resolveParentCategory(
+          interaction.guild,
+          config,
+          ticketType,
+          panelName,
+          staffRoleId
+        );
+
         const ticketChannel = await interaction.guild.channels.create({
           name: channelName,
           type: ChannelType.GuildText,
-          parent: config.ticketCategory,
+          parent: parentCategoryId,
           permissionOverwrites: overwrites
         });
 
