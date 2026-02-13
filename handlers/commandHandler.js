@@ -14,6 +14,32 @@ function ticketFromChannel(store, channelId) {
   return store.openTickets[channelId] || null;
 }
 
+function formatOpenTicketsOverview(store, guildId) {
+  const openTickets = Object.entries(store.openTickets || {})
+    .map(([channelId, ticket]) => ({ channelId, ...ticket }))
+    .sort((a, b) => (a.openedAt || 0) - (b.openedAt || 0));
+
+  if (!openTickets.length) {
+    return "📋 **Openstaande tickets**\nEr staan momenteel geen open tickets.";
+  }
+
+  const lines = openTickets.map((ticket, index) => {
+    const openedBy = ticket.openedBy ? `<@${ticket.openedBy}>` : "Onbekend";
+    const claimedBy = ticket.claimedBy ? `<@${ticket.claimedBy}>` : "Niet geclaimd";
+    const panelName = ticket.panelName || ticket.ticketType || "Onbekend";
+    const createdAt = ticket.openedAt ? `<t:${Math.floor(ticket.openedAt / 1000)}:R>` : "Onbekend";
+    const jumpUrl = `https://discord.com/channels/${guildId}/${ticket.channelId}`;
+
+    return `${index + 1}. [#${ticket.channelName || ticket.channelId}](${jumpUrl}) • ID: **${ticket.ticketId || "?"}** • Panel: **${panelName}** • Opened by: ${openedBy} • Claimed: ${claimedBy} • Geopend: ${createdAt}`;
+  });
+
+  return [
+    `📋 **Openstaande tickets (${openTickets.length})**`,
+    "",
+    ...lines
+  ].join("\n");
+}
+
 async function updateJoinLog(client, config, guild, ticketChannelId) {
   const store = loadTickets();
   const t = store.openTickets[ticketChannelId];
@@ -66,7 +92,8 @@ module.exports.registerGuildCommands = async (client, config) => {
     { name: "jumptotop", description: "Toon een knop om naar de eerste bot-post te springen" },
     { name: "switchpanel", description: "Verander panel/type van dit ticket", options: [{ name: "to_panel", description: "Nieuwe panel key (bv: support, vergoedingen, unban, gang, staff)", type: 3, required: true }] },
     { name: "reopen", description: "Heropen een eerder gesloten ticket-ID", options: [{ name: "ticket_id", description: "Ticket ID", type: 4, required: true }] },
-    { name: "plaats-mededeling", description: "Plaats een mededeling in het mededelingen kanaal", options: [{ name: "bericht", description: "Het bericht dat je wilt plaatsen", type: 3, required: true }] }
+    { name: "plaats-mededeling", description: "Plaats een mededeling in het mededelingen kanaal", options: [{ name: "bericht", description: "Het bericht dat je wilt plaatsen", type: 3, required: true }] },
+    { name: "tickets-overzicht", description: "Plaats een overzicht van alle open tickets in het admin kanaal" }
   ];
 
   const guilds = await client.guilds.fetch();
@@ -286,6 +313,24 @@ module.exports.attach = (client, config) => {
       await announcementChannel.send({ content: "@everyone", embeds: [embed] }).catch(() => null);
 
       return interaction.reply({ content: `Mededeling geplaatst in <#${announcementChannel.id}>.`, ephemeral: true });
+    }
+
+    // /tickets-overzicht
+    if (interaction.commandName === "tickets-overzicht") {
+      if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator)) {
+        return interaction.reply({ content: "Alleen admins kunnen dit overzicht plaatsen.", ephemeral: true });
+      }
+
+      const overviewChannelId = "1471786667877597300";
+      const overviewChannel = await interaction.guild.channels.fetch(overviewChannelId).catch(() => null);
+      if (!overviewChannel || !overviewChannel.isTextBased()) {
+        return interaction.reply({ content: "Overzicht kanaal niet gevonden of niet tekst-gebaseerd.", ephemeral: true });
+      }
+
+      const message = formatOpenTicketsOverview(store, interaction.guild.id);
+      await overviewChannel.send({ content: message }).catch(() => null);
+
+      return interaction.reply({ content: `Overzicht geplaatst in <#${overviewChannel.id}>.`, ephemeral: true });
     }
 
     // /reopen
