@@ -160,7 +160,7 @@ async function upsertJoinLogMessage(client, config, ticketChannel, ticket) {
 }
 
 module.exports.syncOpenTickets = async (client, config) => {
-  const store = loadTickets();
+  const store = await loadTickets();
   let changed = false;
 
   for (const channelId of Object.keys(store.openTickets || {})) {
@@ -187,7 +187,7 @@ module.exports.syncOpenTickets = async (client, config) => {
     }
   }
 
-  if (changed) saveTickets(store);
+  if (changed) await saveTickets(store);
 };
 
 async function sendCloseLog(client, config, ticket, closedBy, reason) {
@@ -213,7 +213,7 @@ async function sendCloseLog(client, config, ticket, closedBy, reason) {
 }
 
 async function closeTicket(client, config, channel, closerId, reason) {
-  const store = loadTickets();
+  const store = await loadTickets();
   const ticket = store.openTickets[channel.id];
   if (!ticket) return { ok: false, msg: "Dit kanaal is geen ticket." };
 
@@ -243,7 +243,7 @@ async function closeTicket(client, config, channel, closerId, reason) {
   store.closedTickets[String(ticket.ticketId)] = ticket;
 
   delete store.openTickets[channel.id];
-  saveTickets(store);
+  await saveTickets(store);
 
   // try delete channel
   await channel.delete().catch(() => null);
@@ -271,12 +271,12 @@ module.exports.attach = (client, config) => {
           ReadMessageHistory: true
         }).catch(() => null);
 
-        const store = loadTickets();
+        const store = await loadTickets();
         const t = store.openTickets[channelId];
         if (t) {
           t.staffInTicket = Array.from(new Set([...(t.staffInTicket || []), interaction.user.id]));
           store.openTickets[channelId] = t;
-          saveTickets(store);
+          await saveTickets(store);
           await upsertJoinLogMessage(client, config, ticketChannel, t);
         }
 
@@ -316,7 +316,7 @@ module.exports.attach = (client, config) => {
 
         const panelName = panels[panelKey]?.title || panelKey;
 
-        const store = loadTickets();
+        const store = await loadTickets();
 
         // duplicate prevention: one open per user per ticketType
         const dup = Object.values(store.openTickets).find(t => t.openedBy === interaction.user.id && t.ticketType === ticketType);
@@ -325,7 +325,7 @@ module.exports.attach = (client, config) => {
           return interaction.reply({ content: `Je hebt al een open ticket: ${ch || "ticket"}`, ephemeral: true });
         }
 
-        const ticketId = nextTicketId(store);
+        const ticketId = await nextTicketId(store);
         const staffRoleId = staffRoleFor(config, ticketType);
 
         const overwrites = [
@@ -383,7 +383,7 @@ module.exports.attach = (client, config) => {
         };
 
         store.openTickets[ticketChannel.id] = ticketData;
-        saveTickets(store);
+        await saveTickets(store);
 
         await upsertJoinLogMessage(client, config, ticketChannel, ticketData);
 
