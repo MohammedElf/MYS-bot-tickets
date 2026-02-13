@@ -15,9 +15,13 @@ Een uitgebreide Discord ticketbot met panelen, geautomatiseerde ticketkanalen, t
 - `pm2 save`
 
 ## Benodigde intents
-Zet in de Discord Developer Portal deze intents aan:
-- Server Members Intent
-- Message Content Intent
+Standaard gebruikt de bot alleen niet-privileged intents, zodat hij ook start als privileged intents niet geactiveerd zijn.
+
+Optionele privileged intents via `.env`:
+- `ENABLE_GUILD_MEMBERS_INTENT=true` (nodig voor welkomstberichten via `guildMemberAdd`)
+- `ENABLE_MESSAGE_CONTENT_INTENT=true` (alleen nodig als je later message-content events toevoegt)
+
+Als je deze flags aanzet, zorg dan dat dezelfde intents ook in de Discord Developer Portal aanstaan.
 
 ## Wat deze bot doet
 
