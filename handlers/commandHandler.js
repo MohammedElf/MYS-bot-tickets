@@ -101,9 +101,8 @@ module.exports.registerGuildCommands = async (client, config) => {
     const guild = await client.guilds.fetch(guildId).catch(() => null);
     if (!guild) continue;
 
-    for (const cmd of commands) {
-      await guild.commands.create(cmd).catch(() => null);
-    }
+    // Set all commands in one request to avoid duplicate command spam on restarts.
+    await guild.commands.set(commands).catch(() => null);
   }
 };
 
@@ -321,7 +320,7 @@ module.exports.attach = (client, config) => {
         return interaction.reply({ content: "Alleen admins kunnen dit overzicht plaatsen.", ephemeral: true });
       }
 
-      const overviewChannelId = "1471786667877597300";
+      const overviewChannelId = config.overviewChannelId || "1471786667877597300";
       const overviewChannel = await interaction.guild.channels.fetch(overviewChannelId).catch(() => null);
       if (!overviewChannel || !overviewChannel.isTextBased()) {
         return interaction.reply({ content: "Overzicht kanaal niet gevonden of niet tekst-gebaseerd.", ephemeral: true });
