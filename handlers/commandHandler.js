@@ -41,7 +41,7 @@ function formatOpenTicketsOverview(store, guildId) {
 }
 
 async function updateJoinLog(client, config, guild, ticketChannelId) {
-  const store = loadTickets();
+  const store = await loadTickets();
   const t = store.openTickets[ticketChannelId];
   if (!t) return;
   const ch = await guild.channels.fetch(ticketChannelId).catch(() => null);
@@ -110,7 +110,7 @@ module.exports.attach = (client, config) => {
   client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    const store = loadTickets();
+    const store = await loadTickets();
     const t = ticketFromChannel(store, interaction.channel.id);
 
     // Commands below mostly require being in ticket
@@ -135,7 +135,7 @@ module.exports.attach = (client, config) => {
 
       t.extraRoles = Array.from(new Set([...(t.extraRoles || []), roleId]));
       store.openTickets[interaction.channel.id] = t;
-      saveTickets(store);
+      await saveTickets(store);
 
       return interaction.reply({ content: `Rol toegevoegd: <@&${roleId}>`, ephemeral: true });
     }
@@ -174,7 +174,7 @@ module.exports.attach = (client, config) => {
       // add to staff in ticket list
       t.staffInTicket = Array.from(new Set([...(t.staffInTicket || []), interaction.user.id]));
       store.openTickets[interaction.channel.id] = t;
-      saveTickets(store);
+      await saveTickets(store);
 
       await updateJoinLog(client, config, interaction.guild, interaction.channel.id);
       return interaction.reply({ content: `Ticket geclaimd door <@${interaction.user.id}>.`, ephemeral: false });
@@ -184,7 +184,7 @@ module.exports.attach = (client, config) => {
     if (interaction.commandName === "unclaimen") {
       t.claimedBy = null;
       store.openTickets[interaction.channel.id] = t;
-      saveTickets(store);
+      await saveTickets(store);
       return interaction.reply({ content: "Claim verwijderd.", ephemeral: true });
     }
 
@@ -194,7 +194,7 @@ module.exports.attach = (client, config) => {
       t.claimedBy = user.id;
       t.staffInTicket = Array.from(new Set([...(t.staffInTicket || []), user.id]));
       store.openTickets[interaction.channel.id] = t;
-      saveTickets(store);
+      await saveTickets(store);
 
       await interaction.channel.permissionOverwrites.edit(user.id, {
         ViewChannel: true, SendMessages: true, ReadMessageHistory: true
@@ -230,7 +230,7 @@ module.exports.attach = (client, config) => {
       // store pending request
       t.closeRequest = { requestedBy: interaction.user.id, reason, delay, createdAt: Date.now(), status: "pending" };
       store.openTickets[interaction.channel.id] = t;
-      saveTickets(store);
+      await saveTickets(store);
 
       return interaction.reply({ content: "Sluitverzoek verstuurd.", ephemeral: true });
     }
@@ -279,7 +279,7 @@ module.exports.attach = (client, config) => {
       await interaction.channel.setName(newName).catch(() => null);
 
       store.openTickets[interaction.channel.id] = t;
-      saveTickets(store);
+      await saveTickets(store);
 
       await updateJoinLog(client, config, interaction.guild, interaction.channel.id);
       return interaction.reply({ content: `Ticket is omgezet naar panel: ${toPanel}`, ephemeral: true });
@@ -363,7 +363,7 @@ module.exports.attach = (client, config) => {
       const newT = { ...closed, channelId: ch.id, reopenedAt: Date.now(), staffInTicket: closed.staffInTicket || [] };
       store.openTickets[ch.id] = newT;
       delete store.closedTickets[String(ticketId)];
-      saveTickets(store);
+      await saveTickets(store);
 
       await updateJoinLog(client, config, interaction.guild, ch.id).catch(() => null);
       return interaction.reply({ content: `Ticket heropend: ${ch}`, ephemeral: true });
@@ -382,7 +382,7 @@ module.exports.attach = (client, config) => {
       const requesterId = parts[2];
       const delay = action === "cr_yes" ? parseInt(parts[3] || "0", 10) : 0;
 
-      const store = loadTickets();
+      const store = await loadTickets();
       const t = store.openTickets[channelId];
       if (!t) return interaction.reply({ content: "Ticket niet gevonden.", ephemeral: true });
 
@@ -394,7 +394,7 @@ module.exports.attach = (client, config) => {
       if (action === "cr_no") {
         t.closeRequest = { ...(t.closeRequest || {}), status: "denied", decidedAt: Date.now(), decidedBy: interaction.user.id };
         store.openTickets[channelId] = t;
-        saveTickets(store);
+        await saveTickets(store);
         await interaction.update({ content: "Sluitverzoek geweigerd.", components: [] }).catch(() => null);
         return;
       }
@@ -402,7 +402,7 @@ module.exports.attach = (client, config) => {
       // approve
       t.closeRequest = { ...(t.closeRequest || {}), status: "approved", decidedAt: Date.now(), decidedBy: interaction.user.id };
       store.openTickets[channelId] = t;
-      saveTickets(store);
+      await saveTickets(store);
 
       await interaction.update({ content: `Sluitverzoek goedgekeurd. Ticket sluit over ${delay} seconden...`, components: [] }).catch(() => null);
 

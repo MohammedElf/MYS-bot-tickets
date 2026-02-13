@@ -56,7 +56,7 @@ async function findExistingPanelMessage(channel, panelConfig) {
 }
 
 module.exports.upsertPanels = async (client, config) => {
-  const store = loadPanels();
+  const store = await loadPanels();
   const panels = config.panels || {};
 
   for (const key of Object.keys(panels)) {
@@ -92,14 +92,14 @@ module.exports.upsertPanels = async (client, config) => {
     if (existing) {
       await existing.edit({ embeds: [embed], components: [row] }).catch(() => null);
       store.panels[key] = { channelId: p.channelId, messageId: existing.id };
-      savePanels(store);
+      await savePanels(store);
       continue;
     }
 
     const sent = await channel.send({ embeds: [embed], components: [row] }).catch(() => null);
     if (sent) {
       store.panels[key] = { channelId: p.channelId, messageId: sent.id };
-      savePanels(store);
+      await savePanels(store);
     }
   }
 };
@@ -108,7 +108,7 @@ module.exports.upsertPermanentMessage = async (client, config) => {
   const permanent = config.permanentSupportMessage;
   if (!permanent?.channelId) return;
 
-  const store = loadPanels();
+  const store = await loadPanels();
   store.permanentMessages = store.permanentMessages || {};
 
   const channel = await client.channels.fetch(permanent.channelId).catch(() => null);
@@ -150,7 +150,7 @@ module.exports.upsertPermanentMessage = async (client, config) => {
   if (fallbackExisting) {
     await fallbackExisting.edit(messagePayload).catch(() => null);
     store.permanentMessages[key] = { channelId: permanent.channelId, messageId: fallbackExisting.id };
-    savePanels(store);
+    await savePanels(store);
     return;
   }
 
@@ -158,5 +158,5 @@ module.exports.upsertPermanentMessage = async (client, config) => {
   if (!sent) return;
 
   store.permanentMessages[key] = { channelId: permanent.channelId, messageId: sent.id };
-  savePanels(store);
+  await savePanels(store);
 };

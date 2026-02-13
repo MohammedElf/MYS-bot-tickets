@@ -53,7 +53,7 @@ Als je deze flags aanzet, zorg dan dat dezelfde intents ook in de Discord Develo
   - transcript wordt naar ticket-opener (DM) gestuurd
   - transcript wordt in transcript-log kanaal geplaatst
   - close-log embed met metadata wordt verstuurd
-  - ticket wordt gearchiveerd in `storage/tickets.json`
+  - ticket wordt gearchiveerd in MySQL (fallback: `storage/tickets.json`)
 
 ### 5) Ticketbeheer en hulpmiddelen
 - Ticket hernoemen.
@@ -101,13 +101,47 @@ Als je deze flags aanzet, zorg dan dat dezelfde intents ook in de Discord Develo
 - `permanentSupportMessage`
 
 ## Data-opslag
+Standaard gebruikt de bot nu MySQL (geschikt voor XAMPP/phpMyAdmin).
+
+- Database: `bot_tickets_live` (of wat je zet in `DB_NAME`)
+- Tabel: `app_state`
+  - sleutel `tickets`: open tickets, gesloten tickets, close requests, next ticket ID
+  - sleutel `panels`: panel message IDs + permanente message IDs
+
+Je hoeft normaal **geen tabel handmatig** te maken: de bot maakt `app_state` automatisch aan bij startup.
+Als je DB `bot_tickets_live` nog niet bestaat, probeert de bot die ook automatisch aan te maken.
+
+Als MySQL niet bereikbaar is, valt de bot automatisch terug op:
 - `storage/tickets.json`
-  - open tickets
-  - gesloten tickets
-  - close request status
 - `storage/panels.json`
-  - panel message IDs
-  - permanent message IDs
+
+### Database omgeving variabelen
+Zet deze in je `.env` (of als system env vars):
+- `DB_HOST=127.0.0.1`
+- `DB_PORT=3306`
+- `DB_USER=root`
+- `DB_PASSWORD=`
+- `DB_NAME=bot_tickets_live`
+
+Optioneel:
+- `STORAGE_MODE=json` om MySQL uit te zetten en altijd JSON te gebruiken.
+
+### Handmatig aanmaken in phpMyAdmin (optioneel)
+Als je het liever zelf doet, kun je deze SQL uitvoeren:
+
+```sql
+CREATE DATABASE IF NOT EXISTS `bot_tickets_live`
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE `bot_tickets_live`;
+
+CREATE TABLE IF NOT EXISTS `app_state` (
+  `state_key` VARCHAR(64) NOT NULL,
+  `state_value` LONGTEXT NOT NULL,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`state_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
 
 ## Tip
 Na het aanpassen van commandonamen of beschrijvingen: herstart de bot zodat guild slash commands opnieuw worden geregistreerd.
