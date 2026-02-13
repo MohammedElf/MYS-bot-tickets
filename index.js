@@ -5,13 +5,24 @@ const panelHandler = require("./panels/panelHandler");
 const ticketHandler = require("./handlers/ticketHandler");
 const commandHandler = require("./handlers/commandHandler");
 
+function envFlag(name) {
+  const value = String(process.env[name] || "").trim().toLowerCase();
+  return value === "1" || value === "true" || value === "yes" || value === "on";
+}
+
+const enableGuildMembersIntent = envFlag("ENABLE_GUILD_MEMBERS_INTENT");
+const enableMessageContentIntent = envFlag("ENABLE_MESSAGE_CONTENT_INTENT");
+
+const intents = [
+  GatewayIntentBits.Guilds,
+  GatewayIntentBits.GuildMessages
+];
+
+if (enableGuildMembersIntent) intents.push(GatewayIntentBits.GuildMembers);
+if (enableMessageContentIntent) intents.push(GatewayIntentBits.MessageContent);
+
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
+  intents
 });
 
 client.once("clientReady", async () => {
@@ -30,32 +41,36 @@ client.once("clientReady", async () => {
   await panelHandler.upsertPermanentMessage(client, config);
 });
 
-client.on("guildMemberAdd", async (member) => {
-  const welcomeChannelId = "1006907804164046880";
-  const rulesChannelId = "1178387378226876426";
+if (enableGuildMembersIntent) {
+  client.on("guildMemberAdd", async (member) => {
+    const welcomeChannelId = "1006907804164046880";
+    const rulesChannelId = "1178387378226876426";
 
-  const welcomeChannel = await member.guild.channels.fetch(welcomeChannelId).catch(() => null);
-  if (!welcomeChannel || !welcomeChannel.isTextBased()) return;
+    const welcomeChannel = await member.guild.channels.fetch(welcomeChannelId).catch(() => null);
+    if (!welcomeChannel || !welcomeChannel.isTextBased()) return;
 
-  const embed = new EmbedBuilder()
-    .setColor(0xffd700)
-    .setTitle("Moyas Roleplay")
-    .setDescription([
-      `**Welkom ${member} 😀**`,
-      `Hallo ${member.user}, welkom op **SWR | Support**!`,
-      `Bekijk eerst de regels in <#${rulesChannelId}>.`
-    ].join("\n"));
+    const embed = new EmbedBuilder()
+      .setColor(0xffd700)
+      .setTitle("Moyas Roleplay")
+      .setDescription([
+        `**Welkom ${member} 😀**`,
+        `Hallo ${member.user}, welkom op **SWR | Support**!`,
+        `Bekijk eerst de regels in <#${rulesChannelId}>.`
+      ].join("\n"));
 
-  const iconUrl = member.guild.iconURL({ size: 1024 });
-  if (iconUrl) {
-    embed.setImage(iconUrl);
-  }
+    const iconUrl = member.guild.iconURL({ size: 1024 });
+    if (iconUrl) {
+      embed.setImage(iconUrl);
+    }
 
-  await welcomeChannel.send({
-    content: "Schilderswijk RP",
-    embeds: [embed]
-  }).catch(() => null);
-});
+    await welcomeChannel.send({
+      content: "Schilderswijk RP",
+      embeds: [embed]
+    }).catch(() => null);
+  });
+} else {
+  console.log("Guild member welcome messages disabled (ENABLE_GUILD_MEMBERS_INTENT is not enabled).");
+}
 
 ticketHandler.attach(client, config);
 commandHandler.attach(client, config);
