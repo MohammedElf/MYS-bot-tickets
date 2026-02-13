@@ -92,6 +92,7 @@ Zet in de Discord Developer Portal deze intents aan:
 - `addRoleChoices`
 - `announcementAllowedRoleIds`
 - `announcementChannelId`
+- `overviewChannelId`
 - `panels`
 - `permanentSupportMessage`
 
